@@ -378,3 +378,14 @@ input:is([type="submit"], [type="reset"]) {
   background: var(--danger);
   color: var(--light);
 }
+
+.error {
+  border: solid 1px var(--light-danger);
+  border-radius: 8px;
+  background-color: var(--dark-danger);
+  color: var(--dark-default);
+  padding: 1rem;
+  margin: 1rem auto;
+  max-width: 480px;
+  width: 100%;
+}
