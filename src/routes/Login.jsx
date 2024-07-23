@@ -15,6 +15,14 @@ export const action = async ({ request }) => {
       throw error;
     }
     if (data.user.id) {
+      const { user, session } = data;
+
+      console.log("DATA: ", data);
+      localStorage.clear();
+      localStorage.setItem("user_id", user.id);
+      localStorage.setItem("access_token", session.access_token);
+      localStorage.setItem("refresh_token", session.refresh_token);
+      localStorage.setItem("expiration", session.expires_at);
       return redirect("/");
     } else {
       throw new Error("Registration Failed");
@@ -25,11 +33,11 @@ export const action = async ({ request }) => {
 };
 
 const Register = () => {
-  const errors = useActionData();
+  const actionData = useActionData();
 
   return (
     <>
-      {errors && errors.status === 400 && (
+      {actionData?.errors && actionData?.errors.status === 400 && (
         <div className="error">Invalid Login Credentials</div>
       )}
       <Form method="POST">
