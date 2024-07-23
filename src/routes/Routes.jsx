@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "../pages/Layout";
-import Home from "./Home";
+import Home, { loader as homeLoader } from "./Home";
 import Register, { action as registerAction } from "./Register";
 import Login, { action as loginAction } from "./Login";
 import Logout, { loader as logoutLoader } from "./Logout";
@@ -14,6 +14,7 @@ const Routes = () => {
         {
           path: "/",
           element: <Home />,
+          loader: homeLoader,
         },
         {
           path: "/register",

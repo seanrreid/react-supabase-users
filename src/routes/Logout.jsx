@@ -5,7 +5,8 @@ import supabase from "../supabase";
 
 export async function loader() {
   try {
-    const { error } = await supabase.auth.signOut();
+    const jwt = localStorage.getItem("access_token");
+    const { error } = await supabase.auth.signOut(jwt);
     if (error) {
       throw error;
     }
@@ -18,7 +19,7 @@ export async function loader() {
 const Logout = () => {
   const response = useLoaderData();
   const navigate = useNavigate();
-  const { setIsAuth } = useAuth();
+  const { setIsAuth, setGroup } = useAuth();
 
   let logged_in = true;
 
@@ -31,8 +32,9 @@ const Logout = () => {
 
   useEffect(() => {
     setIsAuth(logged_in);
+    setGroup("");
     return navigate(`/login`);
-  }, [setIsAuth, logged_in, response, navigate]);
+  }, [setIsAuth, setGroup, logged_in, response, navigate]);
 };
 
 export default Logout;

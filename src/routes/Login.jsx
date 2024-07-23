@@ -1,5 +1,7 @@
-import { useActionData, redirect, json, Form } from "react-router-dom";
+import { useEffect } from "react";
+import { useActionData, useNavigate, json, Form } from "react-router-dom";
 import supabase from "../supabase";
+import { useAuth } from "../AuthContext";
 
 export const action = async ({ request }) => {
   const formData = await request.formData();
@@ -16,14 +18,12 @@ export const action = async ({ request }) => {
     }
     if (data.user.id) {
       const { user, session } = data;
-
-      console.log("DATA: ", data);
       localStorage.clear();
       localStorage.setItem("user_id", user.id);
       localStorage.setItem("access_token", session.access_token);
       localStorage.setItem("refresh_token", session.refresh_token);
       localStorage.setItem("expiration", session.expires_at);
-      return redirect("/");
+      return data;
     } else {
       throw new Error("Registration Failed");
     }
@@ -32,8 +32,24 @@ export const action = async ({ request }) => {
   }
 };
 
-const Register = () => {
+const Login = () => {
   const actionData = useActionData();
+  const navigate = useNavigate();
+  const { setIsAuth, setGroup } = useAuth();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      if (
+        typeof actionData !== "undefined" &&
+        actionData?.user?.aud === "authenticated"
+      ) {
+        setIsAuth(true);
+        setGroup(actionData?.user?.user_metadata?.group_membership);
+        return navigate(`/`);
+      }
+    };
+    checkAuth();
+  }, [actionData, setIsAuth, setGroup, navigate]);
 
   return (
     <>
@@ -55,4 +71,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;
