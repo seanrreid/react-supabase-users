@@ -43,9 +43,15 @@ const Login = () => {
         typeof actionData !== "undefined" &&
         actionData?.user?.aud === "authenticated"
       ) {
+        const group = actionData?.user?.user_metadata?.group_membership;
         setIsAuth(true);
-        setGroup(actionData?.user?.user_metadata?.group_membership);
-        return navigate(`/`);
+        setGroup(group);
+
+        if (group === "admin") {
+          return navigate("/admin");
+        } else {
+          return navigate(`/`);
+        }
       }
     };
     checkAuth();
